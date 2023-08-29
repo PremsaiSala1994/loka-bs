@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Form</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Order Form</h1>
+        <form action="submit_order.php" method="post">
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select class="form-control" id="category" name="category" onchange="updateProducts()">
+                    <option value="category1">Category 1</option>
+                    <option value="category2">Category 2</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="product">Product:</label>
+                <select class="form-control" id="product" name="product" onchange="updateQuantityUnit()">
+                    <!-- Products will be dynamically populated based on category selection -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <div class="input-group">
+                    <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="quantityUnit">units</span>
+                    </div>
+                </div>
+                <small id="minOrderInfo" class="form-text text-muted"></small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Place Order</button>
+        </form>
+    </div>
+
+    <!-- Include Bootstrap JS and jQuery (optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        var productsInfo = {
+            "Product 1A": { units: "units", minOrder: 10 },
+            "Product 1B": { units: "units", minOrder: 5 },
+            "Product 1C": { units: "units", minOrder: 20 },
+            "Product 2A": { units: "boxes", minOrder: 2 },
+            "Product 2B": { units: "boxes", minOrder: 3 },
+            "Product 2C": { units: "boxes", minOrder: 1 }
+        };
+
+        function updateProducts() {
+            var categorySelect = document.getElementById("category");
+            var productSelect = document.getElementById("product");
+
+            var selectedCategory = categorySelect.value;
+            productSelect.innerHTML = ''; // Clear existing options
+
+            var productsInCategory = productsInfo.filter(product => product.category === selectedCategory);
+            productsInCategory.forEach(function(product) {
+                var option = document.createElement("option");
+                option.value = product.name;
+                option.textContent = product.name;
+                productSelect.appendChild(option);
+            });
+
+            updateQuantityUnit();
+        }
+
+        function updateQuantityUnit() {
+            var productSelect = document.getElementById("product");
+            var quantityUnit = document.getElementById("quantityUnit");
+            var minOrderInfo = document.getElementById("minOrderInfo");
+
+            var selectedProduct = productSelect.value;
+            quantityUnit.textContent = productsInfo[selectedProduct].units;
+            minOrderInfo.textContent = "Minimum order quantity: " + productsInfo[selectedProduct].minOrder;
+        }
+
+        // Initialize products based on initial category selection
+        updateProducts();
+    </script>
+</body>
+</html>

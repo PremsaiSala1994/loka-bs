@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .quantity-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 6px;
+            width: 100%;
+        }
+        input[type="number"] {
+            flex: 1;
+            border: none;
+        }
+        .quantity-unit {
+            margin-left: 5px;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Order Form</h1>
+    <form action="submit_order.php" method="post">
+        <label for="category">Category:</label>
+        <select id="category" name="category" onchange="updateProducts()">
+            <option value="category1">Category 1</option>
+            <option value="category2">Category 2</option>
+        </select>
+
+        <label for="product">Product:</label>
+        <select id="product" name="product">
+            <!-- Products will be dynamically populated based on category selection -->
+        </select>
+
+        <label for="quantity">Quantity:</label>
+        <div class="quantity-container">
+            <input type="number" id="quantity" name="quantity" min="1" required>
+            <span class="quantity-unit">units</span>
+        </div>
+
+        <button type="submit">Place Order</button>
+    </form>
+
+    <script>
+        var productsByCategory = {
+            category1: ["Product 1A", "Product 1B", "Product 1C"],
+            category2: ["Product 2A", "Product 2B", "Product 2C"]
+        };
+
+        function updateProducts() {
+            var categorySelect = document.getElementById("category");
+            var productSelect = document.getElementById("product");
+            
+            var selectedCategory = categorySelect.value;
+            productSelect.innerHTML = ''; // Clear existing options
+
+            productsByCategory[selectedCategory].forEach(function(product) {
+                var option = document.createElement("option");
+                option.value = product;
+                option.textContent = product;
+                productSelect.appendChild(option);
+            });
+
+            updateQuantityUnit();
+        }
+
+        function updateQuantityUnit() {
+            var categorySelect = document.getElementById("category");
+            var quantityUnit = document.querySelector(".quantity-unit");
+
+            if (categorySelect.value === "category1") {
+                quantityUnit.textContent = "units";
+            } else if (categorySelect.value === "category2") {
+                quantityUnit.textContent = "boxes";
+            }
+        }
+
+        // Initialize products based on initial category selection
+        updateProducts();
+    </script>
+</body>
+</html>
